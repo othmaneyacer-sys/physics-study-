@@ -1,0 +1,2057 @@
+<!DOCTYPE html>
+<html lang="fr" class="dark">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Physics Study OS - Suivi d'Études en Physique (L1)</title>
+  <meta name="description" content="Tableau de bord complet de suivi d'études en physique (L1) : mécanique, structure de la matière, analyse, histoire des sciences, anglais, ICT.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220%22%20width=%22100%22%20height=%22100%22><text y=%22.9em%22 font-size=%2290%22>⚛️</text></svg>">
+
+  <!-- Polices Google : Inter & JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace'],
+          },
+          colors: {
+            brand: {
+              50: '#ecfeff',
+              100: '#cffafe',
+              400: '#22d3ee',
+              500: '#06b6d4',
+              600: '#0891b2',
+              700: '#0e7490',
+              900: '#164e63',
+            },
+            dark: {
+              bg: '#070a12',
+              surface: '#0d1322',
+              card: '#121a30',
+              border: 'rgba(255, 255, 255, 0.08)',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Lucide Icons -->
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    /* Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: rgba(13, 19, 34, 0.4);
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.25);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(148, 163, 184, 0.45);
+    }
+
+    /* Glassmorphism Classes */
+    .glass-nav {
+      background: rgba(13, 19, 34, 0.75);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+
+    .glass-panel {
+      background: rgba(13, 19, 34, 0.65);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+
+    .glass-card {
+      background: rgba(18, 26, 48, 0.55);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.06);
+    }
+
+    .glass-card:hover {
+      border-color: rgba(255, 255, 255, 0.14);
+    }
+
+    .glass-input {
+      background: rgba(13, 19, 34, 0.7);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(8px);
+    }
+    .glass-input:focus {
+      border-color: rgba(6, 182, 212, 0.7);
+      box-shadow: 0 0 0 2px rgba(6, 182, 212, 0.2);
+      outline: none;
+    }
+
+    /* Checkbox animation */
+    .custom-checkbox {
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    /* Ambient glow backgrounds */
+    .ambient-glow {
+      position: fixed;
+      pointer-events: none;
+      z-index: 0;
+      border-radius: 50%;
+      filter: blur(120px);
+      opacity: 0.15;
+    }
+  </style>
+</head>
+<body class="bg-dark-bg text-slate-100 font-sans min-h-screen flex flex-col selection:bg-brand-500 selection:text-white relative overflow-x-hidden">
+
+  <!-- Ambient Light Effects -->
+  <div class="ambient-glow w-[550px] h-[550px] bg-cyan-600 -top-40 -left-40"></div>
+  <div class="ambient-glow w-[600px] h-[600px] bg-indigo-600 top-1/3 -right-40"></div>
+  <div class="ambient-glow w-[500px] h-[500px] bg-amber-600 -bottom-40 left-1/3"></div>
+
+  <!-- Conteneur global de l'application -->
+  <div id="app" class="relative z-10 flex flex-col min-h-screen">
+    
+    <!-- HEADER & NAVBAR -->
+    <header class="sticky top-0 z-40 glass-nav">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+        <!-- Logo & Identité -->
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 via-indigo-600 to-amber-500 flex items-center justify-center shadow-lg shadow-cyan-500/20 text-white font-bold text-lg">
+            ⚛️
+          </div>
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="font-extrabold text-lg tracking-tight bg-gradient-to-r from-white via-cyan-100 to-slate-400 bg-clip-text text-transparent">
+                Physics Study OS
+              </span>
+              <span class="text-[10px] font-mono px-2 py-0.5 rounded-full bg-cyan-500/10 border border-cyan-500/20 text-cyan-300 font-semibold">
+                L1 PHYSIQUE
+              </span>
+            </div>
+            <p class="text-[11px] text-slate-400 font-medium hidden sm:block">Tableau de bord de suivi & révisions scientifiques</p>
+          </div>
+        </div>
+
+        <!-- Navigation principale par Onglets -->
+        <nav class="flex items-center space-x-1 sm:space-x-2 bg-slate-900/60 p-1 rounded-xl border border-white/5">
+          <button id="nav-dashboard" onclick="switchView('dashboard')" class="nav-tab px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 text-slate-400 hover:text-white">
+            <i data-lucide="layout-dashboard" class="w-4 h-4"></i>
+            <span class="hidden md:inline">Dashboard</span>
+          </button>
+          <button id="nav-modules" onclick="switchView('modules')" class="nav-tab px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 text-white bg-cyan-600/80 shadow-sm">
+            <i data-lucide="book-open" class="w-4 h-4"></i>
+            <span>Matières & Chapitres</span>
+          </button>
+          <button id="nav-deadlines" onclick="switchView('deadlines')" class="nav-tab px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 text-slate-400 hover:text-white relative">
+            <i data-lucide="calendar-clock" class="w-4 h-4"></i>
+            <span>Deadlines & To-Do</span>
+            <span id="badge-urgent-count" class="hidden absolute -top-1 -right-1 w-4 h-4 rounded-full bg-rose-500 text-[10px] font-bold text-white flex items-center justify-center">
+              0
+            </span>
+          </button>
+        </nav>
+
+        <!-- Actions rapides & Synchronisation -->
+        <div class="flex items-center space-x-2">
+          <!-- Recherche globale -->
+          <button onclick="openSearchModal()" title="Recherche rapide (Ctrl + K)" class="p-2 rounded-lg bg-slate-800/60 hover:bg-slate-700/60 border border-white/5 text-slate-300 transition-colors">
+            <i data-lucide="search" class="w-4 h-4"></i>
+          </button>
+
+          <!-- Export JSON -->
+          <button onclick="exportDataJSON()" title="Sauvegarder / Exporter les données" class="p-2 sm:px-3 sm:py-1.5 rounded-lg bg-slate-800/60 hover:bg-slate-700/60 border border-white/5 text-slate-300 hover:text-white text-xs font-medium flex items-center space-x-1.5 transition-colors">
+            <i data-lucide="download" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">Exporter</span>
+          </button>
+
+          <!-- Import JSON -->
+          <label title="Restaurer / Importer un fichier JSON" class="p-2 sm:px-3 sm:py-1.5 rounded-lg bg-slate-800/60 hover:bg-slate-700/60 border border-white/5 text-slate-300 hover:text-white text-xs font-medium flex items-center space-x-1.5 cursor-pointer transition-colors">
+            <i data-lucide="upload" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">Importer</span>
+            <input type="file" id="import-json-file" accept=".json" class="hidden" onchange="importDataJSON(event)">
+          </label>
+
+          <!-- Reset / Vider -->
+          <button onclick="openResetModal()" title="Réinitialiser l'espace de travail" class="p-2 rounded-lg bg-slate-800/60 hover:bg-rose-500/20 hover:text-rose-400 border border-white/5 text-slate-400 transition-colors">
+            <i data-lucide="rotate-ccw" class="w-4 h-4"></i>
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- Global Progress Bar Banner -->
+    <div class="border-b border-white/5 bg-slate-900/40 px-4 py-2 text-xs">
+      <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+        <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-start">
+          <span class="text-slate-400 font-medium flex items-center gap-1.5">
+            <i data-lucide="check-circle-2" class="w-3.5 h-3.5 text-cyan-400"></i>
+            Progression globale du semestre :
+          </span>
+          <span id="global-progress-text" class="font-bold font-mono text-cyan-300">0% (0/0)</span>
+        </div>
+        <div class="w-full sm:w-72 bg-slate-800/80 rounded-full h-2 overflow-hidden border border-white/5">
+          <div id="global-progress-bar" class="bg-gradient-to-r from-cyan-500 via-indigo-500 to-amber-400 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+        <div id="next-deadline-pill" class="hidden sm:flex items-center space-x-1.5 text-slate-400">
+          <i data-lucide="clock" class="w-3.5 h-3.5 text-amber-400"></i>
+          <span>Prochaine échéance : <span id="next-deadline-text" class="text-white font-medium">Aucune</span></span>
+        </div>
+      </div>
+    </div>
+
+    <!-- MAIN VIEW CONTAINER -->
+    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6">
+
+      <!-- ============================================== -->
+      <!-- VUE 1 : DASHBOARD (Vue synthétique)           -->
+      <!-- ============================================== -->
+      <section id="view-dashboard" class="hidden space-y-6">
+        <!-- Stats Hero -->
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div class="glass-card p-4 rounded-2xl relative overflow-hidden">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+              <span>Tâches accomplies</span>
+              <i data-lucide="check-check" class="w-4 h-4 text-emerald-400"></i>
+            </div>
+            <div class="mt-2 text-2xl font-bold font-mono text-white" id="stat-completed-tasks">0 / 0</div>
+            <div class="text-[11px] text-slate-400 mt-1" id="stat-tasks-percent">0% de réalisation</div>
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-emerald-500/20">
+              <div id="stat-tasks-bar" class="h-full bg-emerald-500" style="width: 0%"></div>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-2xl relative overflow-hidden">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+              <span>Deadlines actives</span>
+              <i data-lucide="alarm-clock" class="w-4 h-4 text-amber-400"></i>
+            </div>
+            <div class="mt-2 text-2xl font-bold font-mono text-white" id="stat-pending-deadlines">0</div>
+            <div class="text-[11px] text-amber-400 mt-1" id="stat-urgent-deadlines">0 urgentes (&le; 7j)</div>
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-amber-500/20">
+              <div class="h-full bg-amber-500 w-1/2"></div>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-2xl relative overflow-hidden">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+              <span>Chapitres suivis</span>
+              <i data-lucide="layers" class="w-4 h-4 text-cyan-400"></i>
+            </div>
+            <div class="mt-2 text-2xl font-bold font-mono text-white" id="stat-total-chapters">0</div>
+            <div class="text-[11px] text-slate-400 mt-1">Sur 6 modules de physique</div>
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-cyan-500/20">
+              <div class="h-full bg-cyan-500 w-full"></div>
+            </div>
+          </div>
+
+          <div class="glass-card p-4 rounded-2xl relative overflow-hidden">
+            <div class="flex items-center justify-between text-slate-400 text-xs font-medium">
+              <span>To-Do List</span>
+              <i data-lucide="list-todo" class="w-4 h-4 text-indigo-400"></i>
+            </div>
+            <div class="mt-2 text-2xl font-bold font-mono text-white" id="stat-pending-todos">0</div>
+            <div class="text-[11px] text-slate-400 mt-1" id="stat-completed-todos">0 terminées</div>
+            <div class="absolute bottom-0 left-0 right-0 h-1 bg-indigo-500/20">
+              <div class="h-full bg-indigo-500 w-2/3"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6 Modules Cards Grid -->
+        <div>
+          <div class="flex items-center justify-between mb-4">
+            <h2 class="text-base font-semibold text-white flex items-center gap-2">
+              <i data-lucide="grid" class="w-4 h-4 text-cyan-400"></i>
+              Aperçu des 6 Matières
+            </h2>
+            <span class="text-xs text-slate-400">Cliquez sur une matière pour commencer à la remplir</span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="dashboard-modules-grid">
+            <!-- Injecté dynamiquement par JS -->
+          </div>
+        </div>
+
+        <!-- Upcoming Deadlines & Urgent Section -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div class="glass-panel p-5 rounded-2xl">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                <i data-lucide="clock-alert" class="w-4 h-4 text-rose-400"></i>
+                Prochaines Échéances & Partiels
+              </h3>
+              <button onclick="switchView('deadlines')" class="text-xs text-cyan-400 hover:text-cyan-300">Voir tout &rarr;</button>
+            </div>
+            <div id="dashboard-upcoming-deadlines" class="space-y-2.5">
+              <!-- Injecté par JS -->
+            </div>
+          </div>
+
+          <div class="glass-panel p-5 rounded-2xl">
+            <div class="flex items-center justify-between mb-4">
+              <h3 class="text-sm font-semibold text-white flex items-center gap-2">
+                <i data-lucide="sparkles" class="w-4 h-4 text-amber-400"></i>
+                Prise en main rapide
+              </h3>
+            </div>
+            <div class="space-y-3 text-xs text-slate-300">
+              <div class="p-3 rounded-xl bg-slate-800/40 border border-white/5 flex items-start gap-3">
+                <div class="p-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 shrink-0 mt-0.5">
+                  <i data-lucide="folder-plus" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="font-medium text-white">Créez vos chapitres à votre rythme</div>
+                  <p class="text-slate-400 text-[11px] mt-0.5">Les matières sont prêtes et vierges. Cliquez sur "+ Nouveau Chapitre" pour structurer vos cours, TD et TP au fil des semaines.</p>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-800/40 border border-white/5 flex items-start gap-3">
+                <div class="p-1.5 rounded-lg bg-emerald-500/20 text-emerald-300 shrink-0 mt-0.5">
+                  <i data-lucide="save" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="font-medium text-white">Sauvegarde automatique dans votre navigateur</div>
+                  <p class="text-slate-400 text-[11px] mt-0.5">Tout est enregistré instantanément en local. Utilisez le bouton "Exporter" pour télécharger une copie de sauvegarde.</p>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-800/40 border border-white/5 flex items-start gap-3">
+                <div class="p-1.5 rounded-lg bg-amber-500/20 text-amber-300 shrink-0 mt-0.5">
+                  <i data-lucide="calendar" class="w-4 h-4"></i>
+                </div>
+                <div>
+                  <div class="font-medium text-white">Ne manquez aucun compte-rendu de TP</div>
+                  <p class="text-slate-400 text-[11px] mt-0.5">Dans l'onglet "Deadlines & To-Do", programmez vos rendus de TP et révisions de partiels avec des alertes automatiques.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- VUE 2 : MATIÈRES & CHAPITRES (Vue principale)  -->
+      <!-- ============================================== -->
+      <section id="view-modules" class="space-y-6">
+        
+        <!-- MODULE SELECTOR BAR (6 modules) -->
+        <div class="glass-panel p-2.5 rounded-2xl">
+          <div class="text-[11px] font-semibold uppercase tracking-wider text-slate-400 px-3 py-1 flex items-center justify-between">
+            <span>Sélectionner une matière</span>
+            <span class="text-slate-400 font-mono">6 Modules au programme</span>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-2 mt-1" id="modules-tab-bar">
+            <!-- Rendu dynamique des 6 onglets -->
+          </div>
+        </div>
+
+        <!-- ACTIVE MODULE CONTAINER -->
+        <div id="active-module-container" class="space-y-6">
+          <!-- Entête du Module Actif -->
+          <div class="glass-panel p-5 sm:p-6 rounded-2xl relative overflow-hidden" id="module-header-card">
+            <!-- Rendu dynamique par JS -->
+          </div>
+
+          <!-- Liste des Chapitres du Module -->
+          <div class="space-y-6" id="chapters-list-container">
+            <!-- Chapitres injectés par JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================================== -->
+      <!-- VUE 3 : DEADLINES & TO-DO (Gestion du temps)  -->
+      <!-- ============================================== -->
+      <section id="view-deadlines" class="hidden space-y-6">
+        
+        <!-- En-tête de la section -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 glass-panel p-4 rounded-2xl">
+          <div>
+            <h2 class="text-lg font-bold text-white flex items-center gap-2">
+              <i data-lucide="calendar-range" class="w-5 h-5 text-cyan-400"></i>
+              Échéances, Examens, CR de TP & To-Do
+            </h2>
+            <p class="text-xs text-slate-400">Planifiez vos partiels, rendus de comptes-rendus de TP et gérez vos rappels quotidiens.</p>
+          </div>
+          <div class="flex items-center space-x-2">
+            <button onclick="cleanCompletedDeadlines()" title="Supprimer définitivement les deadlines terminées" class="px-3 py-1.5 rounded-xl bg-slate-800/80 hover:bg-rose-500/20 hover:text-rose-300 border border-white/5 text-xs font-medium text-slate-300 flex items-center gap-1.5 transition-all">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5 text-rose-400"></i>
+              <span>Nettoyer terminées</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Grille 2 colonnes : Deadlines & To-Do -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- COLONNE GAUCHE (7/12) : DEADLINES & EXAMENS -->
+          <div class="lg:col-span-7 space-y-4">
+            <div class="glass-panel p-5 rounded-2xl space-y-4">
+              <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                <div class="flex items-center space-x-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-pulse"></span>
+                  <h3 class="font-bold text-sm text-white">Deadlines & Dates Clés</h3>
+                </div>
+                <!-- Filtres -->
+                <div class="flex items-center space-x-1 text-xs">
+                  <button onclick="filterDeadlines('all')" id="dl-filter-all" class="dl-filter-btn px-2.5 py-1 rounded-lg bg-cyan-600 text-white font-medium">Toutes</button>
+                  <button onclick="filterDeadlines('urgent')" id="dl-filter-urgent" class="dl-filter-btn px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white">Urgentes</button>
+                  <button onclick="filterDeadlines('completed')" id="dl-filter-completed" class="dl-filter-btn px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white">Faites</button>
+                </div>
+              </div>
+
+              <!-- Formulaire d'ajout rapide de Deadline -->
+              <form id="add-deadline-form" onsubmit="handleAddDeadline(event)" class="bg-slate-900/60 p-3.5 rounded-xl border border-white/5 space-y-3">
+                <div class="text-[11px] font-semibold text-slate-400 flex items-center justify-between">
+                  <span>+ Nouvelle échéance</span>
+                  <span class="text-slate-400">Partiel, CR de TP, Devoir</span>
+                </div>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                  <input type="text" id="dl-input-title" placeholder="Titre (ex: Compte-Rendu TP Pendule)" required class="col-span-1 sm:col-span-2 px-3 py-1.5 rounded-lg text-xs glass-input text-white placeholder-slate-500">
+                  <select id="dl-input-module" class="px-2.5 py-1.5 rounded-lg text-xs glass-input text-slate-200">
+                    <option value="mecanique">Mécanique</option>
+                    <option value="matter">Structure of Matter</option>
+                    <option value="analysis">Analysis</option>
+                    <option value="history_science">History of Science</option>
+                    <option value="english">English</option>
+                    <option value="ict">ICT</option>
+                    <option value="autre">Autre / Général</option>
+                  </select>
+                  <select id="dl-input-type" class="px-2.5 py-1.5 rounded-lg text-xs glass-input text-slate-200">
+                    <option value="Compte-Rendu TP">Compte-Rendu TP (CR TP)</option>
+                    <option value="Examen">Examen / Partiel</option>
+                    <option value="Contrôle TD">Contrôle Continu TD</option>
+                    <option value="Devoir Maison">Devoir Maison (DM)</option>
+                    <option value="Autre">Autre</option>
+                  </select>
+                  <input type="date" id="dl-input-date" required class="px-2.5 py-1.5 rounded-lg text-xs glass-input text-slate-200">
+                  <select id="dl-input-priority" class="px-2.5 py-1.5 rounded-lg text-xs glass-input text-slate-200">
+                    <option value="high">Priorité : Haute 🔥</option>
+                    <option value="medium" selected>Priorité : Moyenne ⚡</option>
+                    <option value="low">Priorité : Basse ☕</option>
+                  </select>
+                </div>
+                <button type="submit" class="w-full py-2 bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white rounded-lg text-xs font-semibold shadow-md shadow-cyan-600/20 transition-all flex items-center justify-center space-x-1.5">
+                  <i data-lucide="plus" class="w-4 h-4"></i>
+                  <span>Ajouter l'échéance</span>
+                </button>
+              </form>
+
+              <!-- Liste des Deadlines -->
+              <div id="deadlines-list" class="space-y-2.5 max-h-[500px] overflow-y-auto pr-1">
+                <!-- Rendu dynamique par JS -->
+              </div>
+            </div>
+          </div>
+
+          <!-- COLONNE DROITE (5/12) : TO-DO LIST GÉNÉRALE -->
+          <div class="lg:col-span-5 space-y-4">
+            <div class="glass-panel p-5 rounded-2xl space-y-4">
+              <div class="flex items-center justify-between border-b border-white/5 pb-3">
+                <div class="flex items-center space-x-2">
+                  <span class="w-2.5 h-2.5 rounded-full bg-cyan-400"></span>
+                  <h3 class="font-bold text-sm text-white">To-Do List Générale</h3>
+                </div>
+                <button onclick="cleanCompletedTodos()" title="Supprimer les tâches terminées" class="text-[11px] text-slate-400 hover:text-rose-400 flex items-center gap-1 transition-colors">
+                  <i data-lucide="trash" class="w-3 h-3"></i>
+                  <span>Nettoyer</span>
+                </button>
+              </div>
+
+              <!-- Formulaire ajout To-Do -->
+              <form id="add-todo-form" onsubmit="handleAddTodo(event)" class="flex gap-2">
+                <input type="text" id="todo-input-title" placeholder="Nouvelle tâche générale (ex: Acheter blouse TP)..." required class="flex-1 px-3 py-2 rounded-xl text-xs glass-input text-white placeholder-slate-500">
+                <button type="submit" class="px-3.5 py-2 bg-cyan-600 hover:bg-cyan-500 text-white rounded-xl text-xs font-semibold shadow-md transition-all flex items-center justify-center">
+                  <i data-lucide="plus" class="w-4 h-4"></i>
+                </button>
+              </form>
+
+              <!-- Liste des To-Dos -->
+              <div id="todos-list" class="space-y-2 max-h-[500px] overflow-y-auto pr-1">
+                <!-- Rendu dynamique par JS -->
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="glass-panel border-t border-white/5 py-4 mt-auto">
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-slate-400">
+        <div class="flex items-center space-x-2">
+          <span class="font-semibold text-slate-300">Physics Study OS</span>
+          <span>&bull;</span>
+          <span>Hébergeable gratuitement sur GitHub Pages</span>
+        </div>
+        <div class="flex items-center space-x-4">
+          <span id="storage-status-pill" class="flex items-center gap-1.5 text-emerald-400">
+            <span class="w-2 h-2 rounded-full bg-emerald-400 animate-ping"></span>
+            localStorage synchronisé
+          </span>
+          <span class="text-slate-400">|</span>
+          <a href="#" onclick="openSearchModal(); return false;" class="text-slate-400 hover:text-white transition-colors">Raccourci : Ctrl+K</a>
+        </div>
+      </div>
+    </footer>
+
+  </div>
+
+  <!-- ============================================== -->
+  <!-- MODALES ET DIALOGUES                          -->
+  <!-- ============================================== -->
+
+  <!-- 1. Modal Recherche Globale (Ctrl+K) -->
+  <div id="modal-search" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden flex items-start justify-center pt-20 p-4">
+    <div class="glass-panel w-full max-w-xl rounded-2xl shadow-2xl border border-white/10 overflow-hidden transform transition-all">
+      <div class="p-4 border-b border-white/10 flex items-center gap-3">
+        <i data-lucide="search" class="w-5 h-5 text-cyan-400"></i>
+        <input type="text" id="search-input" oninput="handleSearch(this.value)" placeholder="Rechercher un cours, un TD, un TP, une formule ou une deadline..." class="w-full bg-transparent text-sm text-white focus:outline-none placeholder-slate-500">
+        <span class="text-[10px] font-mono px-2 py-1 bg-slate-800 rounded border border-white/10 text-slate-400">ESC</span>
+      </div>
+      <div id="search-results" class="max-h-80 overflow-y-auto p-3 space-y-2 text-xs">
+        <p class="text-slate-400 text-center py-6">Commencez à taper pour chercher dans toutes les matières...</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 2. Modal Confirmation Réinitialisation -->
+  <div id="modal-reset" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-white/10 shadow-2xl space-y-4">
+      <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
+        <i data-lucide="alert-triangle" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-white">Vider l'espace de travail ?</h3>
+        <p class="text-xs text-slate-400 mt-1">Cette action remettra à zéro tous les chapitres, tâches et échéances. Pensez à exporter vos données avant si nécessaire.</p>
+      </div>
+      <div class="flex justify-end space-x-2 pt-2">
+        <button onclick="closeResetModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300">Annuler</button>
+        <button onclick="confirmResetData()" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white">Vider l'espace</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 3. Modal Confirmation Suppression Chapitre -->
+  <div id="modal-delete-chapter" class="fixed inset-0 z-50 bg-black/75 backdrop-blur-md hidden flex items-center justify-center p-4">
+    <div class="glass-panel w-full max-w-md rounded-2xl p-6 border border-white/10 shadow-2xl space-y-4">
+      <div class="w-12 h-12 rounded-xl bg-rose-500/20 text-rose-400 flex items-center justify-center">
+        <i data-lucide="trash-2" class="w-6 h-6"></i>
+      </div>
+      <div>
+        <h3 class="text-base font-bold text-white" id="delete-chapter-title">Supprimer le chapitre ?</h3>
+        <p class="text-xs text-slate-400 mt-1">Tous les cours, TD, TP et sous-tâches associés à ce chapitre seront définitivement supprimés.</p>
+      </div>
+      <div class="flex justify-end space-x-2 pt-2">
+        <button onclick="closeDeleteChapterModal()" class="px-4 py-2 rounded-xl bg-slate-800 hover:bg-slate-700 text-xs font-medium text-slate-300">Annuler</button>
+        <button id="confirm-delete-chapter-btn" class="px-4 py-2 rounded-xl bg-rose-600 hover:bg-rose-500 text-xs font-semibold text-white">Supprimer définitivement</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- 4. Toast Notifications Container -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 space-y-2 pointer-events-none"></div>
+
+  <!-- ============================================== -->
+  <!-- LOGIQUE APPLICATIVE JAVASCRIPT               -->
+  <!-- ============================================== -->
+  <script>
+    /**
+     * PHYSICS STUDY OS (L1) - Architecture de données & Moteur JS
+     * Configuration stricte des 6 modules de physique :
+     * 1. Mécanique            : Cours, TD, TP
+     * 2. Structure of matter  : Cours, TD, TP
+     * 3. Analysis             : Cours, TD
+     * 4. History of science   : Cours
+     * 5. English              : Cours
+     * 6. ICT                  : Cours
+     */
+    const MODULES_CONFIG = [
+      {
+        id: 'mecanique',
+        name: 'Mécanique',
+        short: 'MECA',
+        icon: 'orbit',
+        color: 'amber',
+        bgGradient: 'from-amber-500/20 to-orange-500/5',
+        borderColor: 'border-amber-500/30',
+        textColor: 'text-amber-400',
+        allowedSections: ['Cours', 'TD', 'TP']
+      },
+      {
+        id: 'matter',
+        name: 'Structure of matter',
+        short: 'MATTER',
+        icon: 'atom',
+        color: 'cyan',
+        bgGradient: 'from-cyan-500/20 to-sky-500/5',
+        borderColor: 'border-cyan-500/30',
+        textColor: 'text-cyan-400',
+        allowedSections: ['Cours', 'TD', 'TP']
+      },
+      {
+        id: 'analysis',
+        name: 'Analysis',
+        short: 'MATH',
+        icon: 'variable',
+        color: 'indigo',
+        bgGradient: 'from-indigo-500/20 to-violet-500/5',
+        borderColor: 'border-indigo-500/30',
+        textColor: 'text-indigo-400',
+        allowedSections: ['Cours', 'TD']
+      },
+      {
+        id: 'history_science',
+        name: 'History of science',
+        short: 'HIST',
+        icon: 'scroll',
+        color: 'emerald',
+        bgGradient: 'from-emerald-500/20 to-teal-500/5',
+        borderColor: 'border-emerald-500/30',
+        textColor: 'text-emerald-400',
+        allowedSections: ['Cours']
+      },
+      {
+        id: 'english',
+        name: 'English',
+        short: 'ENG',
+        icon: 'languages',
+        color: 'rose',
+        bgGradient: 'from-rose-500/20 to-pink-500/5',
+        borderColor: 'border-rose-500/30',
+        textColor: 'text-rose-400',
+        allowedSections: ['Cours']
+      },
+      {
+        id: 'ict',
+        name: 'ICT',
+        short: 'ICT',
+        icon: 'laptop',
+        color: 'fuchsia',
+        bgGradient: 'from-fuchsia-500/20 to-pink-500/5',
+        borderColor: 'border-fuchsia-500/30',
+        textColor: 'text-fuchsia-400',
+        allowedSections: ['Cours']
+      }
+    ];
+
+    // Clé de stockage isolée pour ne pas interférer avec CS Study OS
+    const STORAGE_KEY = 'physics_study_os_v1_data';
+
+    // État global de l'application
+    let appState = {
+      currentView: 'modules', // 'dashboard' | 'modules' | 'deadlines'
+      activeModuleId: 'mecanique',
+      deadlinesFilter: 'all', // 'all' | 'urgent' | 'completed'
+      modules: {},
+      deadlines: [],
+      todos: []
+    };
+
+    /**
+     * Initialisation par défaut : Tous les chapitres sont vides pour qu'elle puisse les remplir à sa guise !
+     */
+    function getDefaultData() {
+      return {
+        modules: {
+          mecanique: { id: 'mecanique', chapters: [] },
+          matter: { id: 'matter', chapters: [] },
+          analysis: { id: 'analysis', chapters: [] },
+          history_science: { id: 'history_science', chapters: [] },
+          english: { id: 'english', chapters: [] },
+          ict: { id: 'ict', chapters: [] }
+        },
+        deadlines: [],
+        todos: []
+      };
+    }
+
+    /**
+     * Initialisation et chargement des données
+     */
+    function initApp() {
+      loadData();
+      renderNavigationTabs();
+      renderModulesTabBar();
+      renderActiveModule();
+      renderDeadlinesView();
+      renderTodosList();
+      renderDashboard();
+      updateGlobalStats();
+
+      // Date par défaut du formulaire d'échéance à aujourd'hui
+      const dlDateInput = document.getElementById('dl-input-date');
+      if (dlDateInput && !dlDateInput.value) {
+        dlDateInput.value = new Date().toISOString().split('T')[0];
+      }
+
+      // Raccourci clavier Ctrl+K / Cmd+K pour la recherche
+      window.addEventListener('keydown', (e) => {
+        if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+          e.preventDefault();
+          openSearchModal();
+        }
+        if (e.key === 'Escape') {
+          closeSearchModal();
+          closeResetModal();
+          closeDeleteChapterModal();
+        }
+      });
+
+      refreshIcons();
+    }
+
+    function refreshIcons() {
+      if (window.lucide) {
+        lucide.createIcons();
+      }
+    }
+
+    /**
+     * Persistance : LocalStorage & Sauvegarde
+     */
+    function loadData() {
+      try {
+        const saved = localStorage.getItem(STORAGE_KEY);
+        if (saved) {
+          const parsed = JSON.parse(saved);
+          appState.modules = parsed.modules || {};
+          appState.deadlines = parsed.deadlines || [];
+          appState.todos = parsed.todos || [];
+
+          // S'assurer de la présence des 6 modules
+          MODULES_CONFIG.forEach(cfg => {
+            if (!appState.modules[cfg.id]) {
+              appState.modules[cfg.id] = { id: cfg.id, chapters: [] };
+            }
+          });
+        } else {
+          // Charger le modèle vierge initial
+          const defaults = getDefaultData();
+          appState.modules = defaults.modules;
+          appState.deadlines = defaults.deadlines;
+          appState.todos = defaults.todos;
+          saveData(false);
+        }
+      } catch (err) {
+        console.error("Erreur chargement localStorage:", err);
+        const defaults = getDefaultData();
+        appState.modules = defaults.modules;
+        appState.deadlines = defaults.deadlines;
+        appState.todos = defaults.todos;
+      }
+    }
+
+    function saveData(notify = true) {
+      try {
+        const payload = {
+          modules: appState.modules,
+          deadlines: appState.deadlines,
+          todos: appState.todos,
+          updatedAt: new Date().toISOString()
+        };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(payload));
+        updateGlobalStats();
+        if (notify) {
+          showToast("Modifications enregistrées", "success");
+        }
+      } catch (err) {
+        console.error("Erreur sauvegarde localStorage:", err);
+        showToast("Erreur lors de la sauvegarde", "error");
+      }
+    }
+
+    /**
+     * Export & Import JSON
+     */
+    function exportDataJSON() {
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(
+        JSON.stringify({
+          app: "Physics Study OS",
+          version: "1.0",
+          exportDate: new Date().toISOString(),
+          modules: appState.modules,
+          deadlines: appState.deadlines,
+          todos: appState.todos
+        }, null, 2)
+      );
+      const downloadAnchor = document.createElement('a');
+      const filename = `physics-study-os-backup-${new Date().toISOString().slice(0, 10)}.json`;
+      downloadAnchor.setAttribute("href", dataStr);
+      downloadAnchor.setAttribute("download", filename);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast(`Exporté vers ${filename}`, "success");
+    }
+
+    function importDataJSON(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        try {
+          const content = JSON.parse(e.target.result);
+          if (!content.modules) {
+            throw new Error("Format JSON invalide : 'modules' manquant");
+          }
+          appState.modules = content.modules;
+          appState.deadlines = content.deadlines || [];
+          appState.todos = content.todos || [];
+
+          // S'assurer de la présence des 6 modules
+          MODULES_CONFIG.forEach(cfg => {
+            if (!appState.modules[cfg.id]) {
+              appState.modules[cfg.id] = { id: cfg.id, chapters: [] };
+            }
+          });
+
+          saveData(false);
+          renderModulesTabBar();
+          renderActiveModule();
+          renderDeadlinesView();
+          renderTodosList();
+          renderDashboard();
+          showToast("Données importées avec succès !", "success");
+        } catch (err) {
+          console.error("Erreur import JSON:", err);
+          showToast("Fichier JSON invalide", "error");
+        }
+        event.target.value = '';
+      };
+      reader.readAsText(file);
+    }
+
+    /**
+     * Réinitialisation vers l'espace vierge
+     */
+    function openResetModal() {
+      document.getElementById('modal-reset').classList.remove('hidden');
+    }
+    function closeResetModal() {
+      document.getElementById('modal-reset').classList.add('hidden');
+    }
+    function confirmResetData() {
+      const defaults = getDefaultData();
+      appState.modules = defaults.modules;
+      appState.deadlines = defaults.deadlines;
+      appState.todos = defaults.todos;
+      saveData(false);
+      renderModulesTabBar();
+      renderActiveModule();
+      renderDeadlinesView();
+      renderTodosList();
+      renderDashboard();
+      closeResetModal();
+      showToast("Espace de travail réinitialisé !", "info");
+    }
+
+    /**
+     * Navigation entre les Vues
+     */
+    function switchView(viewName) {
+      appState.currentView = viewName;
+      document.getElementById('view-dashboard').classList.add('hidden');
+      document.getElementById('view-modules').classList.add('hidden');
+      document.getElementById('view-deadlines').classList.add('hidden');
+
+      const tabs = ['dashboard', 'modules', 'deadlines'];
+      tabs.forEach(tab => {
+        const btn = document.getElementById(`nav-${tab}`);
+        if (tab === viewName) {
+          btn.className = "nav-tab px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 text-white bg-cyan-600/90 shadow-sm";
+        } else {
+          btn.className = "nav-tab px-3 py-1.5 rounded-lg text-xs sm:text-sm font-medium transition-all flex items-center space-x-1.5 text-slate-400 hover:text-white";
+        }
+      });
+
+      document.getElementById(`view-${viewName}`).classList.remove('hidden');
+
+      if (viewName === 'dashboard') {
+        renderDashboard();
+      } else if (viewName === 'modules') {
+        renderActiveModule();
+      } else if (viewName === 'deadlines') {
+        renderDeadlinesView();
+        renderTodosList();
+      }
+
+      refreshIcons();
+    }
+
+    function renderNavigationTabs() {
+      updateGlobalStats();
+    }
+
+    /**
+     * Barre des 6 Matières
+     */
+    function renderModulesTabBar() {
+      const container = document.getElementById('modules-tab-bar');
+      container.innerHTML = '';
+
+      MODULES_CONFIG.forEach(cfg => {
+        const isActive = (appState.activeModuleId === cfg.id);
+        const moduleData = appState.modules[cfg.id] || { chapters: [] };
+        const stats = calculateModuleProgress(moduleData);
+        
+        const btn = document.createElement('button');
+        btn.onclick = () => selectModule(cfg.id);
+        btn.className = `p-2.5 rounded-xl text-left transition-all relative flex flex-col justify-between border ${
+          isActive 
+            ? `bg-slate-800/90 ${cfg.borderColor} shadow-lg shadow-cyan-500/5 ring-1 ring-white/10` 
+            : 'bg-slate-900/50 border-white/5 hover:bg-slate-800/50 hover:border-white/10'
+        }`;
+
+        // Badges des sections permises pour ce module
+        const allowedBadges = cfg.allowedSections.map(sec => {
+          let bClass = 'bg-slate-800 text-slate-400';
+          if (sec === 'Cours') bClass = 'bg-cyan-500/20 text-cyan-300';
+          if (sec === 'TD') bClass = 'bg-amber-500/20 text-amber-300';
+          if (sec === 'TP') bClass = 'bg-emerald-500/20 text-emerald-300';
+          return `<span class="text-[9px] font-mono px-1 py-0.2 rounded font-semibold ${bClass}">${sec}</span>`;
+        }).join(' ');
+
+        btn.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between">
+              <span class="text-xs font-bold text-white tracking-tight">${cfg.name}</span>
+              <i data-lucide="${cfg.icon}" class="w-3.5 h-3.5 ${cfg.textColor}"></i>
+            </div>
+            <div class="flex items-center space-x-1 mt-1.5">
+              ${allowedBadges}
+            </div>
+          </div>
+          <div class="mt-2.5">
+            <div class="flex justify-between items-center text-[10px] text-slate-400 font-mono mb-1">
+              <span>${stats.chapterCount} chap.</span>
+              <span class="${stats.percent === 100 && stats.totalTasks > 0 ? 'text-emerald-400' : 'text-slate-300'} font-semibold">${stats.percent}%</span>
+            </div>
+            <div class="w-full bg-slate-800 h-1 rounded-full overflow-hidden">
+              <div class="bg-gradient-to-r from-cyan-500 to-indigo-400 h-full rounded-full transition-all" style="width: ${stats.percent}%"></div>
+            </div>
+          </div>
+        `;
+        container.appendChild(btn);
+      });
+
+      refreshIcons();
+    }
+
+    function selectModule(moduleId) {
+      appState.activeModuleId = moduleId;
+      renderModulesTabBar();
+      renderActiveModule();
+      if (appState.currentView !== 'modules') {
+        switchView('modules');
+      }
+    }
+
+    /**
+     * Rendu du Module Actif & de ses Chapitres
+     */
+    function renderActiveModule() {
+      const currentConfig = MODULES_CONFIG.find(m => m.id === appState.activeModuleId) || MODULES_CONFIG[0];
+      const moduleData = appState.modules[currentConfig.id] || { id: currentConfig.id, chapters: [] };
+      const stats = calculateModuleProgress(moduleData);
+
+      // 1. Entête du Module
+      const headerContainer = document.getElementById('module-header-card');
+      
+      const allowedChips = currentConfig.allowedSections.map(sec => {
+        let style = "bg-cyan-500/20 text-cyan-300 border-cyan-500/30";
+        let iconName = "book-open";
+        if (sec === 'TD') {
+          style = "bg-amber-500/20 text-amber-300 border-amber-500/30";
+          iconName = "edit-3";
+        }
+        if (sec === 'TP') {
+          style = "bg-emerald-500/20 text-emerald-300 border-emerald-500/30";
+          iconName = "flask-conical";
+        }
+        return `
+          <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-lg border text-xs font-semibold ${style}">
+            <i data-lucide="${iconName}" class="w-3.5 h-3.5"></i>
+            Section ${sec}
+          </span>
+        `;
+      }).join('');
+
+      headerContainer.innerHTML = `
+        <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center space-x-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-gradient-to-br ${currentConfig.bgGradient} border ${currentConfig.borderColor} flex items-center justify-center text-white shadow-lg">
+              <i data-lucide="${currentConfig.icon}" class="w-6 h-6 ${currentConfig.textColor}"></i>
+            </div>
+            <div>
+              <div class="flex items-center space-x-2">
+                <h1 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">${currentConfig.name}</h1>
+                <span class="text-[11px] font-mono px-2 py-0.5 rounded bg-slate-800 border border-white/10 text-slate-300 font-semibold">
+                  ${currentConfig.short}
+                </span>
+              </div>
+              <div class="flex flex-wrap items-center gap-2 mt-1.5">
+                <span class="text-xs text-slate-400">Sections actives :</span>
+                ${allowedChips}
+              </div>
+            </div>
+          </div>
+
+          <!-- Actions & Progression -->
+          <div class="flex flex-col sm:flex-row items-start sm:items-center gap-4">
+            <div class="bg-slate-900/80 px-4 py-2.5 rounded-xl border border-white/5 flex items-center space-x-3">
+              <div>
+                <div class="text-[10px] text-slate-400 uppercase font-semibold">Progression Matière</div>
+                <div class="text-sm font-mono font-bold text-white">${stats.completedTasks}/${stats.totalTasks} tâches (${stats.percent}%)</div>
+              </div>
+              <div class="w-20 bg-slate-800 rounded-full h-2 overflow-hidden border border-white/5">
+                <div class="bg-gradient-to-r from-cyan-500 to-indigo-400 h-full rounded-full" style="width: ${stats.percent}%"></div>
+              </div>
+            </div>
+
+            <button onclick="addNewChapter('${currentConfig.id}')" class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-cyan-600 to-indigo-600 hover:from-cyan-500 hover:to-indigo-500 text-white text-xs font-semibold shadow-lg shadow-cyan-500/20 transition-all flex items-center space-x-1.5">
+              <i data-lucide="folder-plus" class="w-4 h-4"></i>
+              <span>+ Nouveau Chapitre</span>
+            </button>
+          </div>
+        </div>
+      `;
+
+      // 2. Liste des Chapitres
+      const chaptersContainer = document.getElementById('chapters-list-container');
+      chaptersContainer.innerHTML = '';
+
+      if (!moduleData.chapters || moduleData.chapters.length === 0) {
+        chaptersContainer.innerHTML = `
+          <div class="glass-panel p-10 rounded-2xl text-center space-y-3">
+            <div class="w-12 h-12 rounded-2xl bg-slate-800/80 border border-white/5 flex items-center justify-center mx-auto text-cyan-400">
+              <i data-lucide="sparkles" class="w-6 h-6"></i>
+            </div>
+            <h3 class="text-base font-semibold text-white">Aucun chapitre pour le moment</h3>
+            <p class="text-xs text-slate-400 max-w-md mx-auto">Créez votre premier chapitre pour cette matière afin d'y organiser vos cours, TD et TP avec leurs sous-tâches respectives.</p>
+            <button onclick="addNewChapter('${currentConfig.id}')" class="mt-2 px-4 py-2 rounded-xl bg-cyan-600 hover:bg-cyan-500 text-white text-xs font-semibold inline-flex items-center space-x-1.5 shadow-md">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Créer le premier chapitre</span>
+            </button>
+          </div>
+        `;
+      } else {
+        moduleData.chapters.forEach((chapter, index) => {
+          const chapterNode = createChapterElement(currentConfig, chapter, index);
+          chaptersContainer.appendChild(chapterNode);
+        });
+      }
+
+      refreshIcons();
+    }
+
+    /**
+     * Construction d'une carte de Chapitre
+     */
+    function createChapterElement(moduleConfig, chapter, chapterIndex) {
+      const card = document.createElement('div');
+      card.className = "glass-panel p-5 sm:p-6 rounded-2xl space-y-5 border border-white/5 transition-all";
+      card.id = `chapter-card-${chapter.id}`;
+
+      // Calcul des stats de ce chapitre
+      let chapTotal = 0;
+      let chapDone = 0;
+      moduleConfig.allowedSections.forEach(secName => {
+        const sec = chapter.sections && chapter.sections[secName];
+        if (sec && sec.tasks) {
+          chapTotal += sec.tasks.length;
+          chapDone += sec.tasks.filter(t => t.completed).length;
+        }
+      });
+      const chapPercent = chapTotal > 0 ? Math.round((chapDone / chapTotal) * 100) : 0;
+
+      // Grille des sections : adapter le nombre de colonnes au nombre de sections permises
+      const colClass = moduleConfig.allowedSections.length === 3 
+        ? "grid-cols-1 md:grid-cols-3" 
+        : moduleConfig.allowedSections.length === 2 
+          ? "grid-cols-1 md:grid-cols-2" 
+          : "grid-cols-1";
+
+      // Génération HTML des sous-fenêtres permises (UNIQUEMENT celles définies)
+      const sectionsHtml = moduleConfig.allowedSections.map(secName => {
+        if (!chapter.sections) chapter.sections = {};
+        if (!chapter.sections[secName]) {
+          chapter.sections[secName] = { notes: '', tasks: [] };
+        }
+        const sectionData = chapter.sections[secName];
+        return renderSectionBlock(moduleConfig.id, chapter.id, secName, sectionData);
+      }).join('');
+
+      card.innerHTML = `
+        <!-- Entête du Chapitre -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between pb-3 border-b border-white/5 gap-3">
+          <div class="flex items-center space-x-3 flex-1">
+            <span class="w-7 h-7 rounded-lg bg-slate-800 text-slate-300 font-mono font-bold text-xs flex items-center justify-center shrink-0 border border-white/10">
+              #${chapterIndex + 1}
+            </span>
+            <div class="flex-1 group flex items-center gap-2">
+              <input type="text" 
+                     value="${escapeHtml(chapter.title)}" 
+                     onchange="updateChapterTitle('${moduleConfig.id}', '${chapter.id}', this.value)"
+                     class="bg-transparent hover:bg-slate-800/40 focus:bg-slate-800 text-sm sm:text-base font-bold text-white focus:outline-none focus:ring-1 focus:ring-cyan-500 rounded px-2 py-1 w-full max-w-lg transition-colors"
+                     title="Cliquez pour modifier le titre du chapitre">
+              <i data-lucide="pencil" class="w-3.5 h-3.5 text-slate-400 group-hover:text-slate-400 shrink-0"></i>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-3 justify-between sm:justify-end">
+            <!-- Progress Pill -->
+            <div class="flex items-center space-x-2 text-xs font-mono">
+              <span class="text-slate-400 text-[11px]">${chapDone}/${chapTotal}</span>
+              <span class="px-2 py-0.5 rounded-full ${chapPercent === 100 && chapTotal > 0 ? 'bg-emerald-500/20 text-emerald-300' : 'bg-slate-800 text-slate-300'} font-semibold">
+                ${chapPercent}%
+              </span>
+            </div>
+
+            <!-- Bouton Supprimer Chapitre -->
+            <button onclick="promptDeleteChapter('${moduleConfig.id}', '${chapter.id}', '${escapeHtml(chapter.title)}')" 
+                    title="Supprimer ce chapitre"
+                    class="p-1.5 rounded-lg text-slate-400 hover:text-rose-400 hover:bg-rose-500/10 transition-colors">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Sous-fenêtres de Sections (strictement Cours / TD / TP selon la matière) -->
+        <div class="grid ${colClass} gap-4">
+          ${sectionsHtml}
+        </div>
+      `;
+
+      return card;
+    }
+
+    /**
+     * Rendu d'une sous-fenêtre de section (Cours, TD ou TP)
+     */
+    function renderSectionBlock(moduleId, chapterId, secName, sectionData) {
+      let badgeStyle = "bg-cyan-500/20 text-cyan-300 border-cyan-500/30";
+      let iconName = "book-open";
+      let accentBorder = "border-cyan-500/20";
+      
+      if (secName === 'TD') {
+        badgeStyle = "bg-amber-500/20 text-amber-300 border-amber-500/30";
+        iconName = "edit-3";
+        accentBorder = "border-amber-500/20";
+      } else if (secName === 'TP') {
+        badgeStyle = "bg-emerald-500/20 text-emerald-300 border-emerald-500/30";
+        iconName = "flask-conical";
+        accentBorder = "border-emerald-500/20";
+      }
+
+      const tasks = sectionData.tasks || [];
+      const tasksCompleted = tasks.filter(t => t.completed).length;
+
+      const tasksHtml = tasks.map(task => {
+        return `
+          <div class="group flex items-start justify-between gap-2 p-1.5 rounded-lg hover:bg-slate-800/50 transition-colors">
+            <div class="flex items-start gap-2.5 flex-1 min-w-0">
+              <input type="checkbox" 
+                     ${task.completed ? 'checked' : ''} 
+                     onchange="toggleTask('${moduleId}', '${chapterId}', '${secName}', '${task.id}')"
+                     class="mt-0.5 rounded bg-slate-900 border-white/20 text-cyan-500 focus:ring-0 focus:ring-offset-0 custom-checkbox w-4 h-4 cursor-pointer shrink-0">
+              <span 
+                contenteditable="true"
+                spellcheck="false"
+                onblur="updateTaskTitle('${moduleId}', '${chapterId}', '${secName}', '${task.id}', this.textContent)"
+                onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
+                class="text-xs ${task.completed ? 'line-through text-slate-400' : 'text-slate-200'} leading-relaxed focus:outline-none focus:bg-slate-800/80 focus:ring-1 focus:ring-cyan-500/50 rounded px-1 -mx-1"
+                title="Cliquer pour modifier">${escapeHtml(task.title)}</span>
+            </div>
+            <button onclick="deleteTask('${moduleId}', '${chapterId}', '${secName}', '${task.id}')" 
+                    title="Supprimer la tâche"
+                    class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-rose-400 p-1 transition-opacity">
+              <i data-lucide="x" class="w-3.5 h-3.5"></i>
+            </button>
+          </div>
+        `;
+      }).join('');
+
+      return `
+        <div class="glass-card rounded-xl p-3.5 flex flex-col justify-between border ${accentBorder} space-y-3">
+          
+          <div>
+            <!-- Section Header -->
+            <div class="flex items-center justify-between pb-2 border-b border-white/5">
+              <div class="flex items-center space-x-2">
+                <span class="inline-flex items-center gap-1 px-2 py-0.5 rounded-md border text-[11px] font-bold ${badgeStyle}">
+                  <i data-lucide="${iconName}" class="w-3 h-3"></i>
+                  ${secName}
+                </span>
+              </div>
+              <span class="text-[10px] font-mono text-slate-400">
+                ${tasksCompleted}/${tasks.length} fait
+              </span>
+            </div>
+
+            <!-- Notes de cours / résumé rapides (formules, théorèmes clés) -->
+            <div class="mt-2">
+              <textarea 
+                placeholder="Formules, théorèmes clés, consignes de TP..." 
+                rows="2"
+                oninput="updateSectionNotes('${moduleId}', '${chapterId}', '${secName}', this.value)"
+                class="w-full text-[11px] bg-slate-900/50 hover:bg-slate-900 focus:bg-slate-900 text-slate-300 placeholder-slate-400 p-2 rounded-lg border border-white/5 focus:border-cyan-500/50 focus:outline-none resize-none transition-all">${escapeHtml(sectionData.notes || '')}</textarea>
+            </div>
+
+            <!-- Liste des Sous-tâches -->
+            <div class="mt-2 space-y-0.5 max-h-48 overflow-y-auto pr-0.5">
+              ${tasks.length === 0 ? `<p class="text-[11px] text-slate-400 italic py-1">Aucune sous-tâche pour le moment</p>` : tasksHtml}
+            </div>
+          </div>
+
+          <!-- Input ajout rapide de sous-tâche -->
+          <div class="pt-2 border-t border-white/5">
+            <form onsubmit="handleAddTask(event, '${moduleId}', '${chapterId}', '${secName}')" class="flex items-center gap-1.5">
+              <input type="text" 
+                     placeholder="+ Tâche ${secName} (Entrée)" 
+                     class="flex-1 px-2.5 py-1.5 rounded-lg text-xs glass-input text-white placeholder-slate-400">
+              <button type="submit" title="Ajouter" class="p-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 hover:text-white transition-colors">
+                <i data-lucide="plus" class="w-3.5 h-3.5"></i>
+              </button>
+            </form>
+          </div>
+
+        </div>
+      `;
+    }
+
+    /**
+     * Actions sur les Chapitres
+     */
+    function addNewChapter(moduleId) {
+      const moduleData = appState.modules[moduleId];
+      if (!moduleData) return;
+
+      const moduleConfig = MODULES_CONFIG.find(m => m.id === moduleId);
+      const newNum = (moduleData.chapters ? moduleData.chapters.length : 0) + 1;
+      
+      const newChapter = {
+        id: 'chap_' + Date.now(),
+        title: `Chapitre ${newNum} : Nouveau Sujet`,
+        sections: {}
+      };
+
+      moduleConfig.allowedSections.forEach(sec => {
+        newChapter.sections[sec] = { notes: '', tasks: [] };
+      });
+
+      if (!moduleData.chapters) moduleData.chapters = [];
+      moduleData.chapters.push(newChapter);
+
+      saveData();
+      renderModulesTabBar();
+      renderActiveModule();
+      renderDashboard();
+    }
+
+    function updateChapterTitle(moduleId, chapterId, newTitle) {
+      const moduleData = appState.modules[moduleId];
+      if (!moduleData || !moduleData.chapters) return;
+      const chap = moduleData.chapters.find(c => c.id === chapterId);
+      if (chap) {
+        chap.title = newTitle.trim() || "Chapitre sans titre";
+        saveData(false);
+      }
+    }
+
+    let chapterToDelete = null;
+
+    function promptDeleteChapter(moduleId, chapterId, chapterTitle) {
+      chapterToDelete = { moduleId, chapterId };
+      document.getElementById('delete-chapter-title').textContent = `Supprimer "${chapterTitle}" ?`;
+      document.getElementById('modal-delete-chapter').classList.remove('hidden');
+
+      document.getElementById('confirm-delete-chapter-btn').onclick = function() {
+        if (chapterToDelete) {
+          const mod = appState.modules[chapterToDelete.moduleId];
+          if (mod && mod.chapters) {
+            mod.chapters = mod.chapters.filter(c => c.id !== chapterToDelete.chapterId);
+            saveData();
+            renderModulesTabBar();
+            renderActiveModule();
+            renderDashboard();
+          }
+        }
+        closeDeleteChapterModal();
+      };
+    }
+
+    function closeDeleteChapterModal() {
+      chapterToDelete = null;
+      document.getElementById('modal-delete-chapter').classList.add('hidden');
+    }
+
+    /**
+     * Actions sur les Sections & Tâches
+     */
+    function updateSectionNotes(moduleId, chapterId, secName, notesText) {
+      const moduleData = appState.modules[moduleId];
+      if (!moduleData) return;
+      const chap = moduleData.chapters.find(c => c.id === chapterId);
+      if (chap && chap.sections && chap.sections[secName]) {
+        chap.sections[secName].notes = notesText;
+        saveData(false);
+      }
+    }
+
+    function handleAddTask(e, moduleId, chapterId, secName) {
+      e.preventDefault();
+      const input = e.target.querySelector('input');
+      const title = input.value.trim();
+      if (!title) return;
+
+      const moduleData = appState.modules[moduleId];
+      if (!moduleData) return;
+      const chap = moduleData.chapters.find(c => c.id === chapterId);
+      if (!chap) return;
+
+      if (!chap.sections[secName]) {
+        chap.sections[secName] = { notes: '', tasks: [] };
+      }
+
+      chap.sections[secName].tasks.push({
+        id: 't_' + Date.now(),
+        title: title,
+        completed: false
+      });
+
+      input.value = '';
+      input.focus();
+      saveData();
+      renderModulesTabBar();
+      renderActiveModule();
+      renderDashboard();
+    }
+
+    function toggleTask(moduleId, chapterId, secName, taskId) {
+      const moduleData = appState.modules[moduleId];
+      if (!moduleData) return;
+      const chap = moduleData.chapters.find(c => c.id === chapterId);
+      if (!chap || !chap.sections[secName]) return;
+
+      const task = chap.sections[secName].tasks.find(t => t.id === taskId);
+      if (task) {
+        task.completed = !task.completed;
+        saveData(false);
+        renderModulesTabBar();
+        renderActiveModule();
+        renderDashboard();
+      }
+    }
+
+    function updateTaskTitle(moduleId, chapterId, secName, taskId, newTitle) {
+      const moduleData = appState.modules[moduleId];
+      if (!moduleData) return;
+      const chap = moduleData.chapters.find(c => c.id === chapterId);
+      if (!chap || !chap.sections[secName]) return;
+
+      const task = chap.sections[secName].tasks.find(t => t.id === taskId);
+      if (task) {
+        task.title = newTitle.trim() || task.title;
+        saveData(false);
+      }
+    }
+
+    function deleteTask(moduleId, chapterId, secName, taskId) {
+      const moduleData = appState.modules[moduleId];
+      if (!moduleData) return;
+      const chap = moduleData.chapters.find(c => c.id === chapterId);
+      if (!chap || !chap.sections[secName]) return;
+
+      chap.sections[secName].tasks = chap.sections[secName].tasks.filter(t => t.id !== taskId);
+      saveData();
+      renderModulesTabBar();
+      renderActiveModule();
+      renderDashboard();
+    }
+
+    /**
+     * VUE DEADLINES & TO-DO
+     */
+    function renderDeadlinesView() {
+      const container = document.getElementById('deadlines-list');
+      container.innerHTML = '';
+
+      let list = [...appState.deadlines];
+
+      list.sort((a, b) => new Date(a.date + ' ' + (a.time || '23:59')) - new Date(b.date + ' ' + (b.time || '23:59')));
+
+      const now = new Date();
+      now.setHours(0,0,0,0);
+
+      if (appState.deadlinesFilter === 'urgent') {
+        const nextWeek = new Date(now);
+        nextWeek.setDate(nextWeek.getDate() + 7);
+        list = list.filter(dl => !dl.completed && new Date(dl.date) <= nextWeek);
+      } else if (appState.deadlinesFilter === 'completed') {
+        list = list.filter(dl => dl.completed);
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 text-center text-slate-400 text-xs italic bg-slate-900/30 rounded-xl border border-white/5">
+            Aucune échéance ne correspond à ce filtre.
+          </div>
+        `;
+        return;
+      }
+
+      list.forEach(dl => {
+        const item = document.createElement('div');
+        const dlDate = new Date(dl.date);
+        dlDate.setHours(0,0,0,0);
+        const diffDays = Math.ceil((dlDate - now) / (1000 * 60 * 60 * 24));
+        
+        let countdownBadge = '';
+        if (dl.completed) {
+          countdownBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-emerald-500/20 text-emerald-300">Terminée</span>`;
+        } else if (diffDays < 0) {
+          countdownBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500/20 text-rose-300 animate-pulse">En retard (${Math.abs(diffDays)}j)</span>`;
+        } else if (diffDays === 0) {
+          countdownBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-rose-500 text-white animate-bounce">Aujourd'hui !</span>`;
+        } else if (diffDays === 1) {
+          countdownBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-bold bg-amber-500/20 text-amber-300">Demain</span>`;
+        } else if (diffDays <= 7) {
+          countdownBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-semibold bg-amber-500/20 text-amber-300">Dans ${diffDays}j</span>`;
+        } else {
+          countdownBadge = `<span class="px-2 py-0.5 rounded text-[10px] font-medium bg-slate-800 text-slate-400">Dans ${diffDays}j</span>`;
+        }
+
+        const modConfig = MODULES_CONFIG.find(m => m.id === dl.module);
+        const modName = modConfig ? modConfig.name : (dl.module === 'autre' ? 'Général' : dl.module);
+
+        item.className = `p-3 rounded-xl border transition-all flex items-center justify-between gap-3 ${
+          dl.completed 
+            ? 'bg-slate-900/40 border-white/5 opacity-60' 
+            : diffDays < 0 
+              ? 'bg-rose-950/20 border-rose-500/30' 
+              : 'bg-slate-900/70 border-white/5 hover:border-white/10'
+        }`;
+
+        item.innerHTML = `
+          <div class="flex items-center space-x-3 flex-1 min-w-0">
+            <input type="checkbox" 
+                   ${dl.completed ? 'checked' : ''} 
+                   onchange="toggleDeadline('${dl.id}')"
+                   class="custom-checkbox rounded bg-slate-900 border-white/20 text-cyan-500 w-4 h-4 cursor-pointer shrink-0">
+            <div class="min-w-0">
+              <div class="flex items-center space-x-2">
+                <span class="text-xs font-semibold ${dl.completed ? 'line-through text-slate-400' : 'text-white'} truncate">
+                  ${escapeHtml(dl.title)}
+                </span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-slate-800 border border-white/5 text-slate-300 font-mono">
+                  ${modName}
+                </span>
+                <span class="text-[9px] px-1.5 py-0.2 rounded bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">
+                  ${escapeHtml(dl.type || 'Échéance')}
+                </span>
+              </div>
+              <div class="flex items-center space-x-2 mt-1 text-[11px] text-slate-400">
+                <i data-lucide="calendar" class="w-3 h-3"></i>
+                <span>${formatDateFr(dl.date)}</span>
+                ${dl.time ? `<span>&bull; ${dl.time}</span>` : ''}
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2 shrink-0">
+            ${countdownBadge}
+            <button onclick="deleteDeadline('${dl.id}')" title="Supprimer définitivement" class="p-1.5 text-slate-400 hover:text-rose-400 rounded-lg hover:bg-rose-500/10 transition-colors">
+              <i data-lucide="trash-2" class="w-4 h-4"></i>
+            </button>
+          </div>
+        `;
+
+        container.appendChild(item);
+      });
+
+      refreshIcons();
+    }
+
+    function handleAddDeadline(e) {
+      e.preventDefault();
+      const title = document.getElementById('dl-input-title').value.trim();
+      const module = document.getElementById('dl-input-module').value;
+      const type = document.getElementById('dl-input-type').value;
+      const date = document.getElementById('dl-input-date').value;
+      const priority = document.getElementById('dl-input-priority').value;
+
+      if (!title || !date) return;
+
+      appState.deadlines.push({
+        id: 'dl_' + Date.now(),
+        title,
+        module,
+        type,
+        date,
+        time: '23:59',
+        priority,
+        completed: false
+      });
+
+      document.getElementById('dl-input-title').value = '';
+      saveData();
+      renderDeadlinesView();
+      renderDashboard();
+    }
+
+    function toggleDeadline(dlId) {
+      const dl = appState.deadlines.find(d => d.id === dlId);
+      if (dl) {
+        dl.completed = !dl.completed;
+        saveData(false);
+        renderDeadlinesView();
+        renderDashboard();
+      }
+    }
+
+    function deleteDeadline(dlId) {
+      appState.deadlines = appState.deadlines.filter(d => d.id !== dlId);
+      saveData();
+      renderDeadlinesView();
+      renderDashboard();
+    }
+
+    function cleanCompletedDeadlines() {
+      const before = appState.deadlines.length;
+      appState.deadlines = appState.deadlines.filter(d => !d.completed);
+      const cleaned = before - appState.deadlines.length;
+      saveData();
+      renderDeadlinesView();
+      renderDashboard();
+      showToast(`${cleaned} deadline(s) terminées supprimées`, "info");
+    }
+
+    function filterDeadlines(filterType) {
+      appState.deadlinesFilter = filterType;
+      const btns = ['all', 'urgent', 'completed'];
+      btns.forEach(b => {
+        const el = document.getElementById(`dl-filter-${b}`);
+        if (b === filterType) {
+          el.className = "dl-filter-btn px-2.5 py-1 rounded-lg bg-cyan-600 text-white font-medium";
+        } else {
+          el.className = "dl-filter-btn px-2.5 py-1 rounded-lg bg-slate-800 text-slate-400 hover:text-white";
+        }
+      });
+      renderDeadlinesView();
+    }
+
+    /**
+     * VUE TO-DO LIST GÉNÉRALE
+     */
+    function renderTodosList() {
+      const container = document.getElementById('todos-list');
+      container.innerHTML = '';
+
+      if (appState.todos.length === 0) {
+        container.innerHTML = `
+          <div class="p-6 text-center text-slate-400 text-xs italic bg-slate-900/30 rounded-xl border border-white/5">
+            Aucune tâche générale en attente.
+          </div>
+        `;
+        return;
+      }
+
+      appState.todos.forEach(todo => {
+        const item = document.createElement('div');
+        item.className = `group flex items-center justify-between p-2.5 rounded-xl border transition-all ${
+          todo.completed 
+            ? 'bg-slate-900/40 border-white/5 opacity-60' 
+            : 'bg-slate-900/70 border-white/5 hover:border-white/10'
+        }`;
+
+        item.innerHTML = `
+          <div class="flex items-center space-x-2.5 flex-1 min-w-0">
+            <input type="checkbox" 
+                   ${todo.completed ? 'checked' : ''} 
+                   onchange="toggleTodo('${todo.id}')"
+                   class="custom-checkbox rounded bg-slate-900 border-white/20 text-cyan-500 w-4 h-4 cursor-pointer shrink-0">
+            <span 
+              contenteditable="true"
+              spellcheck="false"
+              onblur="updateTodoTitle('${todo.id}', this.textContent)"
+              onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur();}"
+              class="text-xs ${todo.completed ? 'line-through text-slate-400' : 'text-slate-200'} truncate focus:outline-none focus:bg-slate-800/80 focus:ring-1 focus:ring-cyan-500/50 rounded px-1 -mx-1"
+              title="Cliquer pour modifier">${escapeHtml(todo.title)}</span>
+          </div>
+          <button onclick="deleteTodo('${todo.id}')" title="Supprimer la tâche" class="opacity-0 group-hover:opacity-100 text-slate-400 hover:text-rose-400 p-1 transition-opacity">
+            <i data-lucide="trash-2" class="w-3.5 h-3.5"></i>
+          </button>
+        `;
+        container.appendChild(item);
+      });
+
+      refreshIcons();
+    }
+
+    function handleAddTodo(e) {
+      e.preventDefault();
+      const input = document.getElementById('todo-input-title');
+      const title = input.value.trim();
+      if (!title) return;
+
+      appState.todos.push({
+        id: 'todo_' + Date.now(),
+        title: title,
+        completed: false
+      });
+
+      input.value = '';
+      input.focus();
+      saveData();
+      renderTodosList();
+      renderDashboard();
+    }
+
+    function updateTodoTitle(todoId, newTitle) {
+      const t = appState.todos.find(item => item.id === todoId);
+      if (t) {
+        t.title = newTitle.trim() || t.title;
+        saveData(false);
+      }
+    }
+
+    function toggleTodo(todoId) {
+      const t = appState.todos.find(item => item.id === todoId);
+      if (t) {
+        t.completed = !t.completed;
+        saveData(false);
+        renderTodosList();
+        renderDashboard();
+      }
+    }
+
+    function deleteTodo(todoId) {
+      appState.todos = appState.todos.filter(item => item.id !== todoId);
+      saveData();
+      renderTodosList();
+      renderDashboard();
+    }
+
+    function cleanCompletedTodos() {
+      const before = appState.todos.length;
+      appState.todos = appState.todos.filter(t => !t.completed);
+      const cleaned = before - appState.todos.length;
+      saveData();
+      renderTodosList();
+      renderDashboard();
+      showToast(`${cleaned} tâche(s) to-do supprimées`, "info");
+    }
+
+    /**
+     * VUE DASHBOARD (Synthèse)
+     */
+    function renderDashboard() {
+      let totalTasks = 0;
+      let completedTasks = 0;
+      let totalChapters = 0;
+
+      MODULES_CONFIG.forEach(cfg => {
+        const mod = appState.modules[cfg.id];
+        if (mod && mod.chapters) {
+          totalChapters += mod.chapters.length;
+          mod.chapters.forEach(chap => {
+            cfg.allowedSections.forEach(secName => {
+              if (chap.sections && chap.sections[secName] && chap.sections[secName].tasks) {
+                totalTasks += chap.sections[secName].tasks.length;
+                completedTasks += chap.sections[secName].tasks.filter(t => t.completed).length;
+              }
+            });
+          });
+        }
+      });
+
+      const tasksPercent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+
+      document.getElementById('stat-completed-tasks').textContent = `${completedTasks} / ${totalTasks}`;
+      document.getElementById('stat-tasks-percent').textContent = `${tasksPercent}% de réalisation globale`;
+      document.getElementById('stat-tasks-bar').style.width = `${tasksPercent}%`;
+
+      const now = new Date();
+      now.setHours(0,0,0,0);
+      const nextWeek = new Date(now);
+      nextWeek.setDate(nextWeek.getDate() + 7);
+
+      const pendingDeadlines = appState.deadlines.filter(d => !d.completed);
+      const urgentDeadlines = pendingDeadlines.filter(d => new Date(d.date) <= nextWeek);
+
+      document.getElementById('stat-pending-deadlines').textContent = pendingDeadlines.length;
+      document.getElementById('stat-urgent-deadlines').textContent = `${urgentDeadlines.length} urgente(s) (≤ 7j)`;
+      document.getElementById('stat-total-chapters').textContent = totalChapters;
+
+      const pendingTodos = appState.todos.filter(t => !t.completed);
+      const completedTodos = appState.todos.filter(t => t.completed);
+      document.getElementById('stat-pending-todos').textContent = pendingTodos.length;
+      document.getElementById('stat-completed-todos').textContent = `${completedTodos.length} terminée(s)`;
+
+      // Grille des 6 modules
+      const modulesGrid = document.getElementById('dashboard-modules-grid');
+      modulesGrid.innerHTML = '';
+
+      MODULES_CONFIG.forEach(cfg => {
+        const mod = appState.modules[cfg.id] || { chapters: [] };
+        const stats = calculateModuleProgress(mod);
+
+        const card = document.createElement('div');
+        card.onclick = () => selectModule(cfg.id);
+        card.className = "glass-card p-4 rounded-2xl hover:border-white/20 transition-all cursor-pointer group flex flex-col justify-between";
+
+        const sectionsList = cfg.allowedSections.join(' &bull; ');
+
+        card.innerHTML = `
+          <div>
+            <div class="flex items-center justify-between">
+              <div class="flex items-center space-x-2.5">
+                <div class="w-8 h-8 rounded-lg bg-gradient-to-br ${cfg.bgGradient} border ${cfg.borderColor} flex items-center justify-center">
+                  <i data-lucide="${cfg.icon}" class="w-4 h-4 ${cfg.textColor}"></i>
+                </div>
+                <div>
+                  <h4 class="text-xs font-bold text-white group-hover:text-cyan-300 transition-colors">${cfg.name}</h4>
+                  <p class="text-[10px] text-slate-400 font-mono">${sectionsList}</p>
+                </div>
+              </div>
+              <span class="text-xs font-mono font-bold ${stats.percent === 100 && stats.totalTasks > 0 ? 'text-emerald-400' : 'text-slate-300'}">${stats.percent}%</span>
+            </div>
+          </div>
+
+          <div class="mt-4">
+            <div class="flex justify-between items-center text-[10px] text-slate-400 mb-1">
+              <span>${stats.chapterCount} chapitres</span>
+              <span>${stats.completedTasks}/${stats.totalTasks} tâches</span>
+            </div>
+            <div class="w-full bg-slate-800 rounded-full h-1.5 overflow-hidden">
+              <div class="bg-gradient-to-r from-cyan-500 to-indigo-400 h-full rounded-full transition-all" style="width: ${stats.percent}%"></div>
+            </div>
+          </div>
+        `;
+        modulesGrid.appendChild(card);
+      });
+
+      // Prochaines Deadlines urgentes
+      const upcomingContainer = document.getElementById('dashboard-upcoming-deadlines');
+      upcomingContainer.innerHTML = '';
+
+      const sortedPending = [...pendingDeadlines].sort((a,b) => new Date(a.date) - new Date(b.date)).slice(0, 4);
+
+      if (sortedPending.length === 0) {
+        upcomingContainer.innerHTML = `
+          <p class="text-slate-400 text-xs italic py-4 text-center">Aucune échéance en attente ! Vous êtes à jour.</p>
+        `;
+      } else {
+        sortedPending.forEach(dl => {
+          const modCfg = MODULES_CONFIG.find(m => m.id === dl.module);
+          const item = document.createElement('div');
+          item.className = "flex items-center justify-between p-2.5 rounded-xl bg-slate-800/40 border border-white/5 text-xs";
+          item.innerHTML = `
+            <div class="flex items-center space-x-2.5 truncate">
+              <span class="w-2 h-2 rounded-full ${dl.priority === 'high' ? 'bg-rose-500' : 'bg-amber-400'} shrink-0"></span>
+              <div class="truncate">
+                <div class="font-medium text-white truncate">${escapeHtml(dl.title)}</div>
+                <div class="text-[10px] text-slate-400">${modCfg ? modCfg.name : 'Général'} &bull; ${formatDateFr(dl.date)}</div>
+              </div>
+            </div>
+            <button onclick="toggleDeadline('${dl.id}'); event.stopPropagation();" class="text-[11px] px-2 py-1 rounded bg-slate-800 hover:bg-emerald-500/20 hover:text-emerald-300 text-slate-300 transition-colors">
+              Fait
+            </button>
+          `;
+          upcomingContainer.appendChild(item);
+        });
+      }
+
+      refreshIcons();
+    }
+
+    /**
+     * Calcul de progression par module
+     */
+    function calculateModuleProgress(moduleData) {
+      if (!moduleData || !moduleData.chapters) {
+        return { chapterCount: 0, totalTasks: 0, completedTasks: 0, percent: 0 };
+      }
+      
+      const modConfig = MODULES_CONFIG.find(m => m.id === moduleData.id);
+      const allowed = modConfig ? modConfig.allowedSections : ['Cours', 'TD', 'TP'];
+
+      let total = 0;
+      let completed = 0;
+
+      moduleData.chapters.forEach(chap => {
+        allowed.forEach(secName => {
+          if (chap.sections && chap.sections[secName] && chap.sections[secName].tasks) {
+            total += chap.sections[secName].tasks.length;
+            completed += chap.sections[secName].tasks.filter(t => t.completed).length;
+          }
+        });
+      });
+
+      const percent = total > 0 ? Math.round((completed / total) * 100) : 0;
+      return {
+        chapterCount: moduleData.chapters.length,
+        totalTasks: total,
+        completedTasks: completed,
+        percent: percent
+      };
+    }
+
+    /**
+     * Mise à jour globale des statistiques (Barre du haut)
+     */
+    function updateGlobalStats() {
+      let totalTasks = 0;
+      let completedTasks = 0;
+
+      MODULES_CONFIG.forEach(cfg => {
+        const mod = appState.modules[cfg.id];
+        if (mod && mod.chapters) {
+          mod.chapters.forEach(chap => {
+            cfg.allowedSections.forEach(secName => {
+              if (chap.sections && chap.sections[secName] && chap.sections[secName].tasks) {
+                totalTasks += chap.sections[secName].tasks.length;
+                completedTasks += chap.sections[secName].tasks.filter(t => t.completed).length;
+              }
+            });
+          });
+        }
+      });
+
+      const percent = totalTasks > 0 ? Math.round((completedTasks / totalTasks) * 100) : 0;
+      document.getElementById('global-progress-bar').style.width = `${percent}%`;
+      document.getElementById('global-progress-text').textContent = `${percent}% (${completedTasks}/${totalTasks})`;
+
+      // Prochaine deadline
+      const pendingDeadlines = appState.deadlines
+        .filter(d => !d.completed)
+        .sort((a,b) => new Date(a.date) - new Date(b.date));
+
+      const nextPill = document.getElementById('next-deadline-pill');
+      const nextText = document.getElementById('next-deadline-text');
+
+      if (pendingDeadlines.length > 0) {
+        nextPill.classList.remove('hidden');
+        const next = pendingDeadlines[0];
+        nextText.textContent = `${next.title} (${formatDateFr(next.date)})`;
+      } else {
+        nextPill.classList.add('hidden');
+      }
+
+      // Pastille rouge d'échéances urgentes
+      const now = new Date();
+      now.setHours(0,0,0,0);
+      const nextWeek = new Date(now);
+      nextWeek.setDate(nextWeek.getDate() + 7);
+      const urgentCount = pendingDeadlines.filter(d => new Date(d.date) <= nextWeek).length;
+
+      const badgeUrgent = document.getElementById('badge-urgent-count');
+      if (urgentCount > 0) {
+        badgeUrgent.textContent = urgentCount;
+        badgeUrgent.classList.remove('hidden');
+      } else {
+        badgeUrgent.classList.add('hidden');
+      }
+    }
+
+    /**
+     * Modal de Recherche Globale
+     */
+    function openSearchModal() {
+      document.getElementById('modal-search').classList.remove('hidden');
+      const input = document.getElementById('search-input');
+      input.value = '';
+      input.focus();
+      handleSearch('');
+      refreshIcons();
+    }
+
+    function closeSearchModal() {
+      document.getElementById('modal-search').classList.add('hidden');
+    }
+
+    function handleSearch(query) {
+      const resultsContainer = document.getElementById('search-results');
+      const q = query.toLowerCase().trim();
+
+      if (!q) {
+        resultsContainer.innerHTML = `<p class="text-slate-400 text-center py-6">Tapez un mot-clé (ex: "cinématique", "newton", "pendule", "partiel")...</p>`;
+        return;
+      }
+
+      let matches = [];
+
+      MODULES_CONFIG.forEach(cfg => {
+        const mod = appState.modules[cfg.id];
+        if (mod && mod.chapters) {
+          mod.chapters.forEach(chap => {
+            if (chap.title.toLowerCase().includes(q)) {
+              matches.push({
+                type: 'Chapitre',
+                title: chap.title,
+                sub: `${cfg.name}`,
+                action: () => {
+                  selectModule(cfg.id);
+                  closeSearchModal();
+                }
+              });
+            }
+
+            cfg.allowedSections.forEach(secName => {
+              if (chap.sections && chap.sections[secName]) {
+                const sec = chap.sections[secName];
+                if (sec.notes && sec.notes.toLowerCase().includes(q)) {
+                  matches.push({
+                    type: `Notes ${secName}`,
+                    title: `Notes dans ${chap.title}`,
+                    sub: `${cfg.name} &bull; ${sec.notes.slice(0, 50)}...`,
+                    action: () => {
+                      selectModule(cfg.id);
+                      closeSearchModal();
+                    }
+                  });
+                }
+                if (sec.tasks) {
+                  sec.tasks.forEach(t => {
+                    if (t.title.toLowerCase().includes(q)) {
+                      matches.push({
+                        type: `Tâche ${secName}`,
+                        title: t.title,
+                        sub: `${cfg.name} > ${chap.title} (${t.completed ? 'Terminée' : 'À faire'})`,
+                        action: () => {
+                          selectModule(cfg.id);
+                          closeSearchModal();
+                        }
+                      });
+                    }
+                  });
+                }
+              }
+            });
+          });
+        }
+      });
+
+      appState.deadlines.forEach(dl => {
+        if (dl.title.toLowerCase().includes(q)) {
+          matches.push({
+            type: 'Deadline',
+            title: dl.title,
+            sub: `Échéance : ${formatDateFr(dl.date)} (${dl.completed ? 'Faite' : 'En attente'})`,
+            action: () => {
+              switchView('deadlines');
+              closeSearchModal();
+            }
+          });
+        }
+      });
+
+      if (matches.length === 0) {
+        resultsContainer.innerHTML = `<p class="text-slate-400 text-center py-6">Aucun résultat trouvé pour "${escapeHtml(q)}"</p>`;
+        return;
+      }
+
+      resultsContainer.innerHTML = matches.map((m, idx) => `
+        <div onclick="window.searchActions[${idx}]()" class="p-2.5 rounded-xl bg-slate-800/40 hover:bg-slate-800 border border-white/5 hover:border-white/10 cursor-pointer flex items-center justify-between transition-colors">
+          <div>
+            <div class="flex items-center space-x-2">
+              <span class="text-[10px] font-mono px-1.5 py-0.2 rounded bg-cyan-500/20 text-cyan-300 font-semibold">${m.type}</span>
+              <span class="font-semibold text-white">${escapeHtml(m.title)}</span>
+            </div>
+            <div class="text-[11px] text-slate-400 mt-0.5">${m.sub}</div>
+          </div>
+          <i data-lucide="chevron-right" class="w-4 h-4 text-slate-400"></i>
+        </div>
+      `).join('');
+
+      window.searchActions = matches.map(m => m.action);
+      refreshIcons();
+    }
+
+    /**
+     * Système de Toast Notifications
+     */
+    function showToast(message, type = 'info') {
+      const container = document.getElementById('toast-container');
+      const toast = document.createElement('div');
+      
+      let border = 'border-cyan-500/30';
+      let text = 'text-white';
+      let icon = 'info';
+
+      if (type === 'success') {
+        border = 'border-emerald-500/30';
+        icon = 'check-circle';
+      } else if (type === 'error') {
+        border = 'border-rose-500/30';
+        icon = 'alert-circle';
+      }
+
+      toast.className = `glass-panel px-4 py-2.5 rounded-xl border ${border} ${text} shadow-xl text-xs flex items-center space-x-2 transition-all transform duration-300 opacity-0 translate-y-2 pointer-events-auto`;
+      toast.innerHTML = `
+        <i data-lucide="${icon}" class="w-4 h-4 shrink-0"></i>
+        <span>${escapeHtml(message)}</span>
+      `;
+
+      container.appendChild(toast);
+      refreshIcons();
+
+      setTimeout(() => {
+        toast.classList.remove('opacity-0', 'translate-y-2');
+      }, 10);
+
+      setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-2');
+        setTimeout(() => toast.remove(), 300);
+      }, 3000);
+    }
+
+    /**
+     * Utilitaires
+     */
+    function formatDateFr(dateStr) {
+      if (!dateStr) return '';
+      const parts = dateStr.split('-');
+      if (parts.length === 3) {
+        return `${parts[2]}/${parts[1]}/${parts[0]}`;
+      }
+      return dateStr;
+    }
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return String(str)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
+    }
+
+    // Lancement au chargement du DOM
+    window.addEventListener('DOMContentLoaded', initApp);
+  </script>
+</body>
+</html>
